@@ -20,7 +20,7 @@ This folder contains everything related to training a YOLOv5 model for basketbal
 
 The trained model weights are available on Google Drive:
 
-🔗 [Download `best.pt` weights from Google Drive]([https://drive.google.com/file/d/1Sfwdwpf_6tFIF3rjUyVJ1z_wQaD68bv0/view?usp=sharing])
+🔗 [Download `best.pt` weights from Google Drive](https://drive.google.com/file/d/1Sfwdwpf_6tFIF3rjUyVJ1z_wQaD68bv0/view?usp=sharing)
 
 
 ## 🧪 Run Experiments with Pretrained Weights
