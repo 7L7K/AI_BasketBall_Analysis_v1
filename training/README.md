@@ -4,10 +4,10 @@ This folder contains everything related to training a YOLOv5 model for basketbal
 
 ## 📂 Contents
 
-- `player_detection.py` — Main script to download the dataset and train the YOLOv5 model.
-- `ball_detection.py` 
+- `player_detection.py` — Main script to download the dataset and train the YOLOv5 player detection model.
+- `ball_detection.py` - Script to train the YOLOv5 ball detection model.
 - `get_weights.py` — Script to load the trained model weights and run experiments.
-- `dataset_config.py` — Utility script to correct dataset structure if needed.
+- `dataset_config.py` — Utility script to fix or adjust the dataset folder structure.
 
 ## 🎯 Training Details
 
