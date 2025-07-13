@@ -4,7 +4,7 @@ from ultralytics import YOLO
 
 
 # Get the dataset that is compatible with the yolov5 model
-rf = Roboflow(api_key="9yPpcn0aDPnKVNT67zUg")
+rf = Roboflow(api_key="YOUR_API_KEY") #Replace with your API Key
 project = rf.workspace("workspace-5ujvu").project("basketball-players-fy4c2-vfsuv")
 version = project.version(17)
 dataset = version.download("yolov5")
