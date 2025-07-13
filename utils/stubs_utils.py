@@ -2,7 +2,7 @@ import os
 import pickle
 
 
-def save_stub(obj, path):
+def save_stub(path, obj):
     """
     Save a Python object to disk using pickle.
     """
