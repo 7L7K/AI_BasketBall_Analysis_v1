@@ -1,29 +1,21 @@
 import os
 import pickle
 
-
-def save_stub(path, obj):
-    """
-    Save a Python object to disk using pickle.
-    """
-    dir_name = os.path.dirname(path)
+def save_stub(stub_path, obj):
+    dir_name = os.path.dirname(stub_path)
     if not os.path.exists(dir_name):
-        os.makedirs(dir_name)
-
-    with open(path, 'wb') as f:
+        os.makedirs(dir_name, exist_ok=True)
+    with open(stub_path, 'wb') as f:
         pickle.dump(obj, f)
-    print(f"[INFO] Object saved to: {path}")
 
 
-def read_stub(path, read=True):
+def read_stub(read_from_stub, stub_path):
     """
-    Load a Python object from a pickle file.
+    Loads a pickled object if allowed and file exists.
     """
-    if read and path and os.path.exists(path):
-        with open(path, 'rb') as f:
+    if read_from_stub and stub_path is not None and os.path.exists(stub_path):
+        with open(stub_path, 'rb') as f:
             obj = pickle.load(f)
-        print(f"[INFO] Object loaded from: {path}")
-        return obj
-
-    return None
+            return obj
     
+    return None
