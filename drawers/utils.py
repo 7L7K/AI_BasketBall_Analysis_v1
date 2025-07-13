@@ -6,15 +6,6 @@ from utils import get_center_bbox, get_width_bbox
 def draw_ellipse(frame, bbox, color, track_id=None):
     """
     Draws an anti-aliased ellipse under the player, along with their track ID.
-    
-    Args:
-        frame (np.ndarray): The video frame.
-        bbox (list or tuple): Bounding box [x1, y1, x2, y2].
-        color (tuple): BGR color for drawing (e.g., (0, 0, 255) for red).
-        track_id (int, optional): ID of the tracked player.
-    
-    Returns:
-        np.ndarray: Annotated frame.
     """
     # Get foot position and ellipse dimensions
     y2 = int(bbox[3])  # Bottom of the bbox (player's feet)
