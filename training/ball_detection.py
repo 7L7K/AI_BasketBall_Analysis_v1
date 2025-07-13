@@ -1,5 +1,12 @@
 """
-After experimenting with many yolos versions, the best for the ball detection was yolov5 with 250 epochs
+ball_detection.py
+
+This script downloads a basketball dataset from Roboflow and trains a YOLOv5 model
+(using the Ultralytics interface) for ball detection. YOLOv5 performed best among
+the tested versions for this task.
+
+Author: Hana FEKI
+Date: 2025-07-13
 """
 
 # Libraries and setup
