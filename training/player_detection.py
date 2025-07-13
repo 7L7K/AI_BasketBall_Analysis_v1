@@ -1,6 +1,5 @@
 # Libraries and setup
 from roboflow import Roboflow
-import shutil
 from ultralytics import YOLO
 
 
@@ -10,9 +9,6 @@ project = rf.workspace("workspace-5ujvu").project("basketball-players-fy4c2-vfsu
 version = project.version(17)
 dataset = version.download("yolov5")
 
-# Moving the train and valid dataset: this is necessary for the yolov5 model
-shutil.move("Basketball-Players-17/train", "Basketball-Players-17/Basketball-Players-17/train")
-shutil.move("Basketball-Players-17/valid", "Basketball-Players-17/Basketball-Players-17/valid")
 
 # Train YOLOv5
 model_path = 'yolov5l6u.pt'
