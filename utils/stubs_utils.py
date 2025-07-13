@@ -15,7 +15,7 @@ def save_stub(obj, path):
     print(f"[INFO] Object saved to: {path}")
 
 
-def load_stub(path, read=True):
+def read_stub(path, read=True):
     """
     Load a Python object from a pickle file.
     """
