@@ -1,16 +1,15 @@
 """
 player_tracker.py
 
-Tracks players in a video using a YOLO model and ByteTrack (via Supervision).
+Tracks players in a video using a YOLO model and ByteTrack via Supervision.
 """
 
 import sys
-import pickle
 from ultralytics import YOLO
-import supervision as sv  # ByteTrack-based tracking
+import supervision as sv  # Tracking library using ByteTrack
 sys.path.append("../")
 
-from utils import save_stub, read_stub
+from utils.stubs_utils import save_stub, read_stub
 
 
 class PlayerTracker:
@@ -20,7 +19,7 @@ class PlayerTracker:
 
     def detect_frames(self, frames, conf=0.5, batch_size=20):
         """
-        Detect objects in frames using YOLO model in batches.
+        Detect objects in batches of video frames using YOLO.
         """
         detections = []
         for i in range(0, len(frames), batch_size):
@@ -31,9 +30,9 @@ class PlayerTracker:
 
     def get_object_tracks(self, frames, read_from_stub=False, stub_path=None):
         """
-        Detect and track 'player' objects across frames. 
-        Optionally load/save from stub to avoid recomputation.
+        Detect and track players across video frames using ByteTrack.
         """
+        # Load from stub if available
         tracks = read_stub(read_from_stub, stub_path)
         if tracks is not None and len(tracks) == len(frames):
             return tracks
@@ -44,20 +43,23 @@ class PlayerTracker:
         for frame_num, detection in enumerate(detections):
             class_names = detection.names
             class_id_map = {v: k for k, v in class_names.items()}
-            
-            sv_detections = sv.Detections.from_ultralytics(detection)
-            tracked_detections = self.tracker.update_with_detections(sv_detections)
 
-            tracks.append({})
-            for det in tracked_detections:
+            sv_detections = sv.Detections.from_ultralytics(detection)
+            tracked = self.tracker.update_with_detections(sv_detections)
+
+            frame_tracks = {}
+            for det in tracked:
                 bbox = det[0].tolist()
                 cls_id = det[3]
                 track_id = det[4]
 
-                # Focus only on players
+                # Keep only 'player' detections
                 if cls_id == class_id_map.get("player"):
-                    tracks[frame_num][track_id] = {"box": bbox}
+                    frame_tracks[track_id] = {"box": bbox}
 
+            tracks.append(frame_tracks)
+
+        # Save results to stub file
         if stub_path:
             save_stub(stub_path, tracks)
 
