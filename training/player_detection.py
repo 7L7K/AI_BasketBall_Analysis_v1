@@ -1,3 +1,14 @@
+"""
+player_detection.py
+
+Downloads the basketball detection dataset from Roboflow and trains a YOLOv5 model
+using the Ultralytics interface.
+
+Author: Hana FEKI
+Date: 2025-07-13
+"""
+
+
 # Libraries and setup
 from roboflow import Roboflow
 from ultralytics import YOLO
