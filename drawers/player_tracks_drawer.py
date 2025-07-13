@@ -5,7 +5,7 @@ Draws tracked player positions on video frames using ellipses.
 """
 
 import cv2
-from utils import draw_ellipse 
+from .utils import draw_ellipse 
 
 
 class PlayerTracksDrawer:
