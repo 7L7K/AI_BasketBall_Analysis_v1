@@ -12,9 +12,6 @@ class PlayerTracker:
     def __init__(self, model_path):
         """
         Initialize the tracker with a YOLO model and a ByteTrack tracker.
-
-        Args:
-            model_path (str): Path to trained YOLO weights (.pt).
         """
         self.model = YOLO(model_path)
         self.tracker = sv.ByteTrack()
