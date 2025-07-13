@@ -30,7 +30,7 @@ class PlayerTracker:
 
         return detections
 
-    def get_object_tracks(self, frames):
+    def get_object_tracks(self, frames, read_from_stub=False, stub_path=None):
         """
         Run detection and tracking on a list of frames.
         """
