@@ -10,6 +10,7 @@ import numpy as np
 from ultralytics import YOLO
 import supervision as sv  # ByteTrack-based object tracking
 from utils.stubs_utils import save_stub, read_stub
+import pandas as pd
 
 sys.path.append("../")
 
@@ -93,4 +94,21 @@ class BallTracker:
             else:
                 last_good_frame_index = i
 
+        return ball_positions
+    
+
+    def interpolate_ball_positions(self, ball_positions):
+        """
+        Fills in missing ball detections by interpolating and backfilling bounding box coordinates across frames to ensure continuous tracking.
+        """
+        ball_positions=[x.get(1,{}).get('bbox',{}) for x in ball_positions]
+        df_ball_positions=pd.DataFrame(ball_positions)
+        
+
+        #interpolation of missing values
+        df_ball_positions.interpolate()
+        df_ball_positions=df_ball_positions.bfill()
+
+
+        ball_positions=[{1:{"bbox":x}} for x in df_ball_positions.to_numpy().tolist() ]
         return ball_positions
