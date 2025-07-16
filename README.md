@@ -43,7 +43,7 @@ This system analyzes basketball games from video using computer vision and AI:
 1. **🎯 Object Detection (YOLO)**  
    Detect players and the basketball in each frame.
 
-2. **🧭 Object Tracking (e.g., DeepSORT or ByteTrack)**  
+2. **🧭 Object Tracking (ByteTrack)**  
    Track players and the ball across video frames.
 
 3. **🎨 Team Classification (Zero-Shot with Hugging Face)**  
