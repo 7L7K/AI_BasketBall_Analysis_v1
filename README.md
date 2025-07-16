@@ -25,6 +25,7 @@ As I was **deeply passionate** about the topic, I decided to **rebuild the entir
 - Adding missing features and enhancements
 
 > 📁 The original version (v0) is available here: [Version 0 - GitHub Repo](https://github.com/HanaFEKI/AI_BasketBall_Analysis_v0)
+
 > ✅ This repository is the **personalized, cleaned-up, and extended version (v1)**.
 
 ---
