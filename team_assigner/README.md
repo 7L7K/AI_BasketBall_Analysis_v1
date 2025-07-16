@@ -7,7 +7,6 @@ This folder contains the logic for automatically assigning basketball players to
 ## 📁 Contents
 
 - `team_assigner.py` — Main class `TeamAssigner` with methods for loading the model, predicting jersey colors, and assigning team IDs to players across frames.
-- `__init__.py` — Empty init file to make this folder a Python module.
 
 ---
 
