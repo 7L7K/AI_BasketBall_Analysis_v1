@@ -1,6 +1,6 @@
-# 🧢 Team Assigner Module
+# 🧢 Team Assigner
 
-This module contains the logic for automatically assigning basketball players to their teams based on jersey color, using the [Fashion CLIP](https://huggingface.co/patrickjohncyh/fashion-clip) model from Hugging Face.
+This folder contains the logic for automatically assigning basketball players to their teams based on jersey color, using the [Fashion CLIP](https://huggingface.co/patrickjohncyh/fashion-clip) model from Hugging Face.
 
 It is used as part of the larger **AI-Powered Basketball Analysis System** to differentiate between teams across video frames.
 
