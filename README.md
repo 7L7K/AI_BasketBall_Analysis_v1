@@ -7,7 +7,7 @@
 
 ## 📘 Project Context
 
-This project was initially part of a **group academic project at ENSTA Paris** during the 2024–2025 academic year. We were a team of **10 students**, split into **5 subgroups**, each responsible for a specific part of the system (e.g., detection, tracking, analytics, etc.).
+This project was initially part of a **group academic project at ENSTA Paris** during the 2024–2025 academic year. We were a team of **10 students**, split into **5 subgroups**, each responsible for a specific part of the system (detection, tracking, analytics, etc.).
 
 Due to tight academic deadlines and the distributed nature of the work, the project:
 - Was not fully completed
@@ -24,7 +24,7 @@ As I was **deeply passionate** about the topic, I decided to **rebuild the entir
 - Fixing bugs and improving the original implementation
 - Adding missing features and enhancements
 
-> 📁 The original version (v0) is available here: https://github.com/HanaFEKI/AI_BasketBall_Analysis_v0  
+> 📁 The original version (v0) is available here: [Version 0- Github Repo] (https://github.com/HanaFEKI/AI_BasketBall_Analysis_v0) 
 > ✅ This repository is the **personalized, cleaned-up, and extended version (v1)**.
 
 ---
@@ -47,15 +47,15 @@ This system analyzes basketball games from video using computer vision and AI:
    Track players and the ball across video frames.
 
 3. **🎨 Team Classification (Zero-Shot with Hugging Face)**  
-   Automatically assign players to teams based on jersey colors using a zero-shot image classifier.
+   Automatically assign players to teams based on jersey colors using a zero-shot image classifier powered by [Fashion CLIP](https://huggingface.co/patrickjohncyh/fashion-clip).
 
-4. **📍 Court Keypoint Detection**  
+5. **📍 Court Keypoint Detection**  
    Detect basketball court landmarks using a keypoint detection model trained on a labeled dataset.
 
-5. **🔄 Perspective Transformation**  
+6. **🔄 Perspective Transformation**  
    Convert broadcast view into a **top-down tactical map** using homography and real-world court dimensions.
 
-6. **📊 Analytics**  
+7. **📊 Analytics**  
    - Count **passes** and **interceptions**  
    - Compute **ball possession** percentage  
    - Calculate **player speed** and **distance covered** (in meters)
