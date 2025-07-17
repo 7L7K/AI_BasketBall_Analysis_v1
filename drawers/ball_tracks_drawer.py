@@ -5,28 +5,43 @@ Draws visual markers for ball positions on video frames.
 Uses green triangle pointers to indicate ball locations.
 """
 
+from typing import List, Dict, Any
 from .utils import draw_triangle
 
 
 class BallTracksDrawer:
-    def __init__(self):
-        self.ball_pointer_color = (0, 255, 0)  # Green
+    """
+    Class for drawing ball position markers on video frames using triangle pointers.
+    """
 
-    def draw(self, video_frames, tracks):
+    def __init__(self, pointer_color: tuple = (0, 255, 0)):
         """
-        Draws ball position markers on each frame.
+        Initializes the drawer with the color for the ball pointer.
+        
+        Args:
+            pointer_color (tuple): BGR color used to draw the triangle (default is green).
+        """
+        self.ball_pointer_color = pointer_color
+
+    def draw(
+        self, 
+        video_frames: List[Any], 
+        tracks: List[Dict[int, Dict[str, Any]]]
+    ) -> List[Any]:
+        """
+        Draws triangle markers for ball positions on each frame.
         """
         output_video_frames = []
 
         for frame_num, frame in enumerate(video_frames):
-            output_frame = frame.copy()
+            frame_copy = frame.copy()
             ball_dict = tracks[frame_num]
 
-            for _, track in ball_dict.items():
+            for track in ball_dict.values():
                 bbox = track.get('bbox')
-                if bbox is not None:
-                    output_frame = draw_triangle(output_frame, bbox, self.ball_pointer_color)
+                if bbox:
+                    frame_copy = draw_triangle(frame_copy, bbox, color=self.ball_pointer_color)
 
-            output_video_frames.append(output_frame)
+            output_video_frames.append(frame_copy)
 
         return output_video_frames
