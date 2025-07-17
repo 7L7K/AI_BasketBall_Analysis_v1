@@ -1,32 +1,33 @@
 """
 player_tracker.py
 
-PlayerTracker class for detecting and tracking players in video frames.
-
-Uses a YOLO model for object detection and ByteTrack (via supervision) for multi-object tracking.
-Supports batch detection and optional caching of tracks using stub files to avoid recomputation.
-
+Defines the PlayerTracker class for detecting and tracking players in video frames.
+Uses YOLO (Ultralytics) for object detection and ByteTrack (via the Supervision library)
+for multi-object tracking. Supports caching via stub files.
 """
 
 import sys
+from typing import List, Dict, Optional
+
 from ultralytics import YOLO
-import supervision as sv  # ByteTrack tracking library
-sys.path.append("../")
+import supervision as sv  # Uses ByteTrack for tracking
 
 from utils.stubs_utils import save_stub, read_stub
 
+sys.path.append("..")
+
 
 class PlayerTracker:
-    def __init__(self, model_path):
+    def __init__(self, model_path: str):
         """
-        Initialize the PlayerTracker with a YOLO model and ByteTrack tracker.
+        Initializes the PlayerTracker with a YOLO model and ByteTrack tracker.
         """
         self.model = YOLO(model_path)
         self.tracker = sv.ByteTrack()
 
-    def detect_frames(self, frames, conf=0.5, batch_size=20):
+    def detect_frames(self, frames: List, conf: float = 0.5, batch_size: int = 20):
         """
-        Detect objects in batches of video frames using YOLO.
+        Detects players in video frames using YOLO in batches.
         """
         detections = []
         for i in range(0, len(frames), batch_size):
@@ -35,10 +36,14 @@ class PlayerTracker:
             detections.extend(preds)
         return detections
 
-    def get_object_tracks(self, frames, read_from_stub=False, stub_path=None):
+    def get_object_tracks(
+        self,
+        frames: List,
+        read_from_stub: bool = False,
+        stub_path: Optional[str] = None
+    ) -> List[Dict[int, Dict[str, List[float]]]]:
         """
-        Detect and track players across video frames using ByteTrack.
-        Loads cached tracks from stub if requested and available.
+        Tracks player objects across video frames using ByteTrack.
         """
         # Load cached tracks if available
         tracks = read_stub(read_from_stub, stub_path)
@@ -61,13 +66,12 @@ class PlayerTracker:
                 cls_id = det[3]
                 track_id = det[4]
 
-                # Keep only 'player' detections
                 if cls_id == class_id_map.get("player"):
                     frame_tracks[track_id] = {"bbox": bbox}
 
             tracks.append(frame_tracks)
 
-        # Save tracks to stub file for future use
+        # Save to stub
         if stub_path:
             save_stub(stub_path, tracks)
 
