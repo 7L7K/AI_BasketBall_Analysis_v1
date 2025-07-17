@@ -2,10 +2,6 @@
 
 This folder contains the logic for automatically assigning basketball players to their teams based on jersey color, using the [Fashion CLIP](https://huggingface.co/patrickjohncyh/fashion-clip) model from Hugging Face.
 
----
-
-## 📁 Contents
-
 - `team_assigner.py` — Main class `TeamAssigner` with methods for loading the model, predicting jersey colors, and assigning team IDs to players across frames.
 
 ---
