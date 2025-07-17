@@ -1,16 +1,17 @@
 """
 video_utils.py
 
-Simple utilities to read and save videos using OpenCV.
+Utility functions for reading and saving videos using OpenCV.
 """
 
 import cv2
 import os
+from typing import List
 
 
-def read_video(video_path):
+def read_video(video_path: str) -> List:
     """
-    Reads a video and returns its frames as a list.
+    Reads a video file and returns its frames as a list of numpy arrays.
     """
     if not os.path.exists(video_path):
         raise FileNotFoundError(f"Video not found: {video_path}")
@@ -28,9 +29,9 @@ def read_video(video_path):
     return frames
 
 
-def save_video(frames, output_path, fps=24.0):
+def save_video(frames: List, output_path: str, fps: float = 24.0) -> None:
     """
-    Saves a list of frames as a video.
+    Saves a list of video frames to a video file.
     """
     if not frames:
         raise ValueError("Frame list is empty. Cannot save video.")
