@@ -6,12 +6,6 @@ This folder contains object tracking implementations for video analysis, primari
 - `ball_tracker.py`   : Ball detection and tracking implementation     
 - `__init__.py`      l: To make this a Python package       
 
-## Overview
-
-Both trackers support:
-- Batch detection of objects in video frames.
-- Tracking across frames.
-- Optional caching of tracking results using stub files for faster subsequent runs.
 
 ## Usage Example
 
