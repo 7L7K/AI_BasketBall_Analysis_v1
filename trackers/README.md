@@ -1,4 +1,4 @@
-# Trackers Module
+# Trackers 
 
 This folder contains object tracking implementations for video analysis, primarily focused on tracking players and balls in sports videos.
 
