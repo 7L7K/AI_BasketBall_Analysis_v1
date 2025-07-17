@@ -18,13 +18,13 @@ This folder contains object tracking implementations for video analysis, primari
 from trackers.player_tracker import PlayerTracker
 from utils.video_utils import read_video
 
-# 🎯 Initialize tracker with YOLO model weights path
+#  Initialize tracker with YOLO model weights path
 tracker = PlayerTracker("models/player_detector.pt")
 
-# 🎞️ Load video frames (list of numpy arrays)
+#  Load video frames (list of numpy arrays)
 frames = read_video("videos/sample.mp4")
 
-# 📌 Get player tracks (with caching)
+#  Get player tracks (with caching)
 tracks = tracker.get_object_tracks(
     frames, 
     read_from_stub=True, 
