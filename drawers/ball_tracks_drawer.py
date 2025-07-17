@@ -17,9 +17,6 @@ class BallTracksDrawer:
     def __init__(self, pointer_color: tuple = (0, 255, 0)):
         """
         Initializes the drawer with the color for the ball pointer.
-        
-        Args:
-            pointer_color (tuple): BGR color used to draw the triangle (default is green).
         """
         self.ball_pointer_color = pointer_color
 
