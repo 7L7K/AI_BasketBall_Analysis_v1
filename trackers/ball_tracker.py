@@ -1,27 +1,38 @@
 """
 ball_tracker.py
 
-This module defines a `BallTracker` class that uses a trained Ultralytics model to detect and track a 'Ball' across video frames using ByteTrack via the Supervision library, with post-processing to remove implausible detections based on motion constraints.
-
+Defines a `BallTracker` class that uses a trained YOLO model (Ultralytics)
+to detect and track a ball across video frames using ByteTrack via the
+Supervision library. Includes post-processing to discard implausible detections
+and interpolate missing ones.
 """
 
 import sys
-import numpy as np
-from ultralytics import YOLO
-import supervision as sv  # ByteTrack-based object tracking
-from utils.stubs_utils import save_stub, read_stub
-import pandas as pd
+from typing import List, Dict, Optional
 
-sys.path.append("../")
+import numpy as np
+import pandas as pd
+from ultralytics import YOLO
+import supervision as sv  # Uses ByteTrack for tracking
+
+from utils.stubs_utils import save_stub, read_stub
+
+sys.path.append("..")
 
 
 class BallTracker:
     def __init__(self, model_path: str):
+        """
+        Initializes the YOLO-based ball tracker.
+
+        Args:
+            model_path (str): Path to the trained YOLO model.
+        """
         self.model = YOLO(model_path)
 
-    def detect_frames(self, frames, conf=0.5, batch_size=20):
+    def detect_frames(self, frames: List, conf: float = 0.5, batch_size: int = 20):
         """
-        Detect objects in video frames using YOLO in batches.
+        Detects objects in video frames using YOLO in batches.
         """
         detections = []
         for i in range(0, len(frames), batch_size):
@@ -30,11 +41,15 @@ class BallTracker:
             detections.extend(preds)
         return detections
 
-    def get_object_tracks(self, frames, read_from_stub=False, stub_path=None):
+    def get_object_tracks(
+        self,
+        frames: List,
+        read_from_stub: bool = False,
+        stub_path: Optional[str] = None
+    ) -> List[Dict[int, Dict[str, List[float]]]]:
         """
-        Detect and track the 'Ball' object across frames using YOLO + ByteTrack.
+        Detects and tracks the 'Ball' object across frames using YOLO + ByteTrack.
         """
-        # Load from stub if available
         tracks = read_stub(read_from_stub, stub_path)
         if tracks is not None and len(tracks) == len(frames):
             return tracks
@@ -51,12 +66,12 @@ class BallTracker:
             chosen_bbox = None
             max_confidence = 0
 
-            for frame_detection in sv_detections:
-                bbox = frame_detection[0].tolist()
-                confidence = frame_detection[2]
-                cls_id = frame_detection[3]
+            for detection_item in sv_detections:
+                bbox = detection_item[0].tolist()
+                confidence = detection_item[2]
+                cls_id = detection_item[3]
 
-                if cls_id == class_id_map.get('Ball'):
+                if cls_id == class_id_map.get("Ball"):
                     if confidence > max_confidence:
                         max_confidence = confidence
                         chosen_bbox = bbox
@@ -64,15 +79,18 @@ class BallTracker:
             if chosen_bbox is not None:
                 tracks[frame_num][1] = {'bbox': chosen_bbox}
 
-        # Save results to stub
         if stub_path:
             save_stub(stub_path, tracks)
 
         return tracks
 
-    def remove_wrong_detections(self, ball_positions, max_dist_per_frame=25):
+    def remove_wrong_detections(
+        self, 
+        ball_positions: List[Dict[int, Dict[str, List[float]]]], 
+        max_dist_per_frame: float = 25
+    ) -> List[Dict[int, Dict[str, List[float]]]]:
         """
-        Removes unrealistic ball detections based on motion constraints.
+        Removes implausible ball detections based on motion constraints.
         """
         last_good_frame_index = -1
 
@@ -95,20 +113,20 @@ class BallTracker:
                 last_good_frame_index = i
 
         return ball_positions
-    
 
-    def interpolate_ball_positions(self, ball_positions):
+    def interpolate_ball_positions(
+        self, 
+        ball_positions: List[Dict[int, Dict[str, List[float]]]]
+    ) -> List[Dict[int, Dict[str, List[float]]]]:
         """
-        Fills in missing ball detections by interpolating and backfilling bounding box coordinates across frames to ensure continuous tracking.
+        Fills in missing ball detections by interpolating and backfilling bounding boxes.
         """
-        ball_positions=[x.get(1,{}).get('bbox',{}) for x in ball_positions]
-        df_ball_positions=pd.DataFrame(ball_positions)
-        
+        bboxes = [frame.get(1, {}).get('bbox', None) for frame in ball_positions]
+        df = pd.DataFrame(bboxes)
 
-        #interpolation of missing values
-        df_ball_positions.interpolate()
-        df_ball_positions=df_ball_positions.bfill()
+        # Interpolate and backfill to fill NaNs
+        df = df.interpolate(limit_direction='both').bfill()
 
-
-        ball_positions=[{1:{"bbox":x}} for x in df_ball_positions.to_numpy().tolist() ]
-        return ball_positions
+        # Rebuild structured output
+        interpolated = [{1: {'bbox': row}} for row in df.to_numpy().tolist()]
+        return interpolated
