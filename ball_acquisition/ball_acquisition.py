@@ -7,7 +7,7 @@ a player's bounding box or close to key points around it.
 
 import sys
 sys.path.append("../")
-from utils import measure_distance, get_center_of_bbox
+from utils import measure_distance, get_center_bbox
 
 
 class BallAcquisitionDetector:
@@ -129,7 +129,7 @@ class BallAcquisitionDetector:
             if not ball_bbox:
                 continue
 
-            ball_center = get_center_of_bbox(ball_bbox)
+            ball_center = get_center_bbox(ball_bbox)
             player_frame_info = player_tracks[frame_num]
             best_player_id = self.find_best_candidate_for_possession(ball_center, player_frame_info, ball_bbox)
 
