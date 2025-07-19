@@ -47,8 +47,3 @@ combined_frames = ball_drawer.draw(player_frames, ball_tracks)
 
 # Step 4: Overlay team ball possession percentages
 final_frames = team_control_drawer.draw(combined_frames, player_assignments, ball_acquisition)
-
-
-# Step 3: Overlay team ball possession percentages
-final_frames = team_control_drawer.draw(combined_frames, player_assignments, ball_acquisition)
-
