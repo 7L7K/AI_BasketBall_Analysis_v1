@@ -25,10 +25,12 @@ This folder contains modules responsible for **visualizing tracking results** on
 
 
 ```python
-from drawers.player_tracks_drawer import PlayerTracksDrawer
-from drawers.ball_tracks_drawer import BallTracksDrawer
-from drawers.team_ball_control_drawer import TeamBallControlDrawer
-from court_keypoints_drawer import CourtKeypointsDrawer
+from drawers import(
+PlayerTracksDrawer,
+BallTracksDrawer,
+TeamBallControlDrawer,
+CourtKeypointsDrawer
+)
 
 # Initialize drawers
 player_drawer = PlayerTracksDrawer()
