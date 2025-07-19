@@ -1,5 +1,5 @@
 """
-pass_and_interception_detector.py
+pass_interception_detector.py
 
 Detects passing and interception events based on changes in ball possession
 between players and their associated teams over time.
