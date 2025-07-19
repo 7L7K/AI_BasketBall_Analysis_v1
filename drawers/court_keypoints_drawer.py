@@ -31,10 +31,10 @@ class CourtKeypointsDrawer:
         for index, frame in enumerate(frames):
             annotated_frame = frame.copy()
             keypoints = court_keypoints[index]
-
+            keypoints_numpy=keypoints.cpu().numpy()
             # Annotate keypoints and optionally labels
-            annotated_frame = self.vertex_annotator.annotate(frame=annotated_frame, keypoints=keypoints)
-            annotated_frame = self.vertex_label_annotator.annotate(frame=annotated_frame, keypoints=keypoints)
+            annotated_frame = self.vertex_annotator.annotate(scene=annotated_frame, key_points=keypoints_numpy)
+            annotated_frame = self.vertex_label_annotator.annotate(scene=annotated_frame, key_points=keypoints_numpy)
 
             output_frames.append(annotated_frame)
 
