@@ -30,8 +30,8 @@ This folder contains all the scripts required to train and test YOLOv5/YOLOv8 mo
 - **Image Size:** 640×640
 
 - **Datasets:**  
-  - Player/Ball: [Roboflow project `basketball-players-fy4c2-vfsuv`, version 17](https://universe.roboflow.com/workspace-5ujvu/basketball-players-fy4c2-vfsuv)   
-  - Court Keypoints: [Roboflow project `reloc2-den7l`, version 1](https://universe.roboflow.com/fyp-3bwmg/reloc2-den7l/dataset/1)
+  - Player/Ball: [Roboflow project `basketball-players-fy4c2-vfsuv`](https://universe.roboflow.com/workspace-5ujvu/basketball-players-fy4c2-vfsuv)   
+  - Court Keypoints: [Roboflow project `reloc2-den7l`](https://universe.roboflow.com/fyp-3bwmg/reloc2-den7l/dataset/1)
 
 ---
 
@@ -39,8 +39,7 @@ This folder contains all the scripts required to train and test YOLOv5/YOLOv8 mo
 
 To use the trained model weights:
 
-- Download from Google Drive:  
-  🔗 [`best.pt`](https://drive.google.com/file/d/1Sfwdwpf_6tFIF3rjUyVJ1z_wQaD68bv0/view?usp=sharing)
+- Download from Google Drive: [`best.pt`](https://drive.google.com/file/d/1Sfwdwpf_6tFIF3rjUyVJ1z_wQaD68bv0/view?usp=sharing)
 
 - Or run inference directly:
 
