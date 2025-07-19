@@ -59,7 +59,6 @@ This system analyzes basketball games from video using computer vision and AI:
 7. **📊 Analytics**  
    - Count **passes** and **interceptions**  
    - Compute **ball possession** percentage  
-   - Calculate **player speed** and **distance covered** (in meters)
 
 ---
 
