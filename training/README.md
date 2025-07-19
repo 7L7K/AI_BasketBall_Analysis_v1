@@ -44,4 +44,6 @@ To use the trained model weights:
 - Or run inference directly:
 
 ```bash
-python get_weights.py
+python get_weights.py --model player --video input_videos/video_1.mp4    # Run inference using the PLAYER detection model on a specific video.
+python get_weights.py --model ball --conf 0.3                            # Run inference using the BALL detection model with a lower confidence threshold (0.3).
+python get_weights.py --model keypoint --video input_videos/video_2.mp4  # Run inference using the COURT KEYPOINT model to detect keypoints (e.g. lines, markers) on a basketball court.
