@@ -1,32 +1,48 @@
-# Training Pipeline
+# 🏀 Training Pipeline for Basketball Player and Ball Detection
 
-This folder contains everything related to training a YOLOv5 model for basketball ball detection using the [Roboflow](https://roboflow.com/) dataset and the Ultralytics YOLO interface.
+This folder contains all the scripts required to train and test YOLOv5/YOLOv8 models on basketball video data using Roboflow datasets.
 
-## 📂 Contents
+---
 
-- `player_detection.py` — Main script to download the dataset and train the YOLOv5 player detection model.
-- `ball_detection.py` - Script to download the dataset and train the YOLOv5 ball detection model.
-- `get_weights.py` — Script to load the trained model weights and run experiments.
-- `dataset_config.py` — Utility script to fix or adjust the dataset folder structure.
+## 📂 Folder Contents
+
+| File | Description |
+|------|-------------|
+| `player_detection.py` | Downloads dataset & trains YOLOv5 on player detection. |
+| `ball_detection.py` | Downloads dataset & trains YOLOv5 on ball detection. |
+| `keypoint_court.py` | Trains YOLOv8-pose model on court keypoint detection. |
+| `get_weights.py` | Loads trained weights and runs inference experiments. |
+| `dataset_config.py` | Utility to restructure dataset folders (if needed). |
+
+---
 
 ## 🎯 Training Details
 
-- **Model:** YOLOv5 (version: `yolov5l6u`)
-- **Epochs:** 100 (For player detection) and 250 (For ball detection)
+- **Models Used:**  
+  - Player & Ball Detection: `yolov5l6u`  
+  - Court Keypoint Detection: `yolov8x-pose.pt`
+
+- **Epochs:**  
+  - Player Detection: 100  
+  - Ball Detection: 250  
+  - Keypoints (Court): 500
+
 - **Image Size:** 640×640
-- **Dataset:** Roboflow (`basketball-players-fy4c2-vfsuv`, version 17)
+
+- **Datasets:**  
+  - Player/Ball: [Roboflow project `basketball-players-fy4c2-vfsuv`, version 17](https://universe.roboflow.com/workspace-5ujvu/basketball-players-fy4c2-vfsuv)   
+  - Court Keypoints: [Roboflow project `reloc2-den7l`, version 1](https://universe.roboflow.com/fyp-3bwmg/reloc2-den7l/dataset/1)
+
+---
 
 ## 📥 Download Trained Weights
 
-The trained model weights are available on Google Drive:
+To use the trained model weights:
 
-🔗 [Download `best.pt` weights from Google Drive](https://drive.google.com/file/d/1Sfwdwpf_6tFIF3rjUyVJ1z_wQaD68bv0/view?usp=sharing)
+- Download from Google Drive:  
+  🔗 [`best.pt`](https://drive.google.com/file/d/1Sfwdwpf_6tFIF3rjUyVJ1z_wQaD68bv0/view?usp=sharing)
 
-
-## 🧪 Run Experiments with Pretrained Weights
-
-To use the trained model directly without retraining, run:
+- Or run inference directly:
 
 ```bash
 python get_weights.py
-```
