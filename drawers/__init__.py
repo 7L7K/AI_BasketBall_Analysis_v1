@@ -1,3 +1,4 @@
 from .player_tracks_drawer import PlayerTracksDrawer
 from .ball_tracks_drawer import BallTracksDrawer
 from .team_ball_control_drawe import TeamBallControlDrawer
+from .pass_interception_drawer import PassInterceptionDrawer
