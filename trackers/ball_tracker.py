@@ -121,19 +121,22 @@ class BallTracker:
         """
         Fills in missing ball detections by interpolating and backfilling bounding boxes.
         """
-        bboxes = [frame.get(1, {}).get('bbox', None) for frame in ball_positions]
 
-        # Check if we have at least one valid bbox
-        if all(b is None for b in bboxes):
-            print("No valid ball detections to interpolate.")
-            return [{} for _ in ball_positions]
+        # On remplace None par une liste de np.nan de la bonne taille
+        bboxes = []
+        for frame in ball_positions:
+            bbox = frame.get(1, {}).get('bbox', None)
+            if bbox is None:
+                bboxes.append([np.nan, np.nan, np.nan, np.nan])  # 4 valeurs nan
+            else:
+                bboxes.append(bbox)
 
         df = pd.DataFrame(bboxes)
 
-        # Interpolate and backfill to fill NaNs
+        # Interpolation et remplissage
         df = df.interpolate(limit_direction='both').bfill()
 
-        # Rebuild structured output
+        # Reconstruction du format initial
         interpolated = []
         for row in df.to_numpy().tolist():
             if any(pd.isna(coord) for coord in row):
