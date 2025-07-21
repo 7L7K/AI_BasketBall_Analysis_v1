@@ -29,21 +29,23 @@ def read_video(video_path: str) -> List:
     return frames
 
 
-def save_video(frames: List, output_path: str, fps: float = 24.0) -> None:
-    """
-    Saves a list of video frames to a video file.
-    """
-    if not frames:
-        raise ValueError("Frame list is empty. Cannot save video.")
+def save_video(output_frames, output_path):
+    dir_name = os.path.dirname(output_path)
+    if not os.path.exists(dir_name):
+        os.mkdir(dir_name)
 
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    # Use 'mp4v' codec for MP4 format
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 
-    height, width = frames[0].shape[:2]
-    fourcc = cv2.VideoWriter_fourcc(*"XVID")
-    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+    # Ensure the output_path ends with .mp4
+    if not output_path.endswith('.mp4'):
+        output_path += '.mp4'
 
-    for frame in frames:
+    height, width = output_frames[0].shape[:2]
+    out = cv2.VideoWriter(output_path, fourcc, 24.0, (width, height))
+
+    for frame in output_frames:
         out.write(frame)
-
     out.release()
+
     print(f"Video saved to {output_path}")
