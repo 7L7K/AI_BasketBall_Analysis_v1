@@ -13,7 +13,7 @@ class TacticalViewDrawer:
         self.start_x = start_x
         self.start_y = start_y
 
-    def draw(self, video_frames, court_image_path: str, width: int, height: int):
+    def draw(self, video_frames, court_image_path: str, width: int, height: int, tactical_court_keypoints):
         """
         Draws a semi-transparent court image overlay on each video frame.
         """
@@ -32,8 +32,16 @@ class TacticalViewDrawer:
 
             overlay = frame[y1:y2, x1:x2].copy()
             blended = cv2.addWeighted(court_image, 0.6, overlay, 0.4, 0)
-
             frame[y1:y2, x1:x2] = blended
+
+            for keypoint_index, keypoint in enumerate(tactical_court_keypoints):
+                x,y=keypoint
+                x+=self.start_x
+                y+=self.start_y
+                cv2.circle(frame, (x,y), 5 , (0,0,255),-1)
+                cv2.putText(frame, str(key_point_index), (x,y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0),2)
+                
+
             output_video_frames.append(frame)
 
         return output_video_frames
