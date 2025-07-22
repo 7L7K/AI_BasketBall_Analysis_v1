@@ -39,7 +39,7 @@ This folder contains all the scripts required to train and test YOLOv5/YOLOv8 mo
 
 To use the trained model weights:
 
-- Download from Google Drive: [`best.pt`](https://drive.google.com/file/d/1Sfwdwpf_6tFIF3rjUyVJ1z_wQaD68bv0/view?usp=sharing)
+- Download from Google Drive: [`best.pt`](https://drive.google.com/file/d/1eAHfkK7xEC6IV7AkII90PFNUF82m7oot/view?usp=sharing)
 
 - Or run inference directly:
 
