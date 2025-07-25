@@ -1,44 +1,33 @@
-"""
-ball_tracks_drawer.py
-
-Draws visual markers for ball positions on video frames.
-Uses green triangle pointers to indicate ball locations.
-"""
-
-from typing import List, Dict, Any
-from .utils import draw_triangle
-
+from .utils import draw_traingle
 
 class BallTracksDrawer:
-    """
-    Class for drawing ball position markers on video frames using triangle pointers.
-    """
+    def __init__(self):
+        """
+        Initialize the BallTracksDrawer instance with custom colors.
+        """
+        self.ball_color_in_possession = (0, 140, 255)  # Orange
+        self.ball_color_free = (255, 0, 255)           # Magenta
 
-    def __init__(self, pointer_color: tuple = (0, 255, 0)):
+    def draw(self, video_frames, tracks, ball_aquisition):
         """
-        Initializes the drawer with the color for the ball pointer.
-        """
-        self.ball_pointer_color = pointer_color
-
-    def draw(
-        self, 
-        video_frames: List[Any], 
-        tracks: List[Dict[int, Dict[str, Any]]]
-    ) -> List[Any]:
-        """
-        Draws triangle markers for ball positions on each frame.
+        Draws ball pointers on each video frame based on tracking and possession info.
         """
         output_video_frames = []
-
         for frame_num, frame in enumerate(video_frames):
-            frame_copy = frame.copy()
+            frame = frame.copy()
             ball_dict = tracks[frame_num]
 
-            for track in ball_dict.values():
-                bbox = track.get('bbox')
-                if bbox:
-                    frame_copy = draw_triangle(frame_copy, bbox, color=self.ball_pointer_color)
+            for _, ball in ball_dict.items():
+                if ball["bbox"] is None:
+                    continue
 
-            output_video_frames.append(frame_copy)
+                # Choisir la couleur selon possession
+                if ball_aquisition[frame_num] is not None:
+                    color = self.ball_color_in_possession
+                else:
+                    color = self.ball_color_free
 
+                frame = draw_traingle(frame, ball["bbox"], color)
+
+            output_video_frames.append(frame)
         return output_video_frames
