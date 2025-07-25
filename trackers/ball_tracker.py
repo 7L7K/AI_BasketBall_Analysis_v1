@@ -1,12 +1,3 @@
-"""
-ball_tracker.py
-
-Defines a `BallTracker` class that uses a trained YOLO model (Ultralytics)
-to detect and track a ball across video frames using ByteTrack via the
-Supervision library. Includes post-processing to discard implausible detections
-and interpolate missing ones.
-"""
-
 import sys
 from typing import List, Dict, Optional
 
