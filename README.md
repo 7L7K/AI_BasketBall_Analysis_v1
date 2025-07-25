@@ -7,10 +7,8 @@
 
 ## 🎥 Demo Video
 
-👉 **Watch the full demonstration of this system here:**
-
 <video width="720" height="400" controls>
-  <source src="output_videos/demo_analytics.mp4" type="video/mp4">
+  <source src="output_videos/Video_1_output.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
 
