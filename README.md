@@ -5,6 +5,17 @@
 
 ---
 
+## 🎥 Demo Video
+
+👉 **Watch the full demonstration of this system here:**
+
+<video width="720" height="400" controls>
+  <source src="output_videos/demo_analytics.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+---
+
 ## 📘 Project Context
 
 This project was initially part of a **group academic project at ENSTA Paris** during the 2024–2025 academic year. We were a team of **10 students**, split into **5 subgroups**, each responsible for a specific part of the system (detection, tracking, analytics, etc.).
@@ -27,13 +38,6 @@ As I was **deeply passionate** about the topic, I decided to **rebuild the entir
 > 📁 The original version (v0) is available here: [Version 0 - GitHub Repo](https://github.com/HanaFEKI/AI_BasketBall_Analysis_v0)
 
 > ✅ This repository is the **personalized, cleaned-up, and extended version (v1)**.
-
----
-
-## 🎥 Demo Video
-
-👉 **Watch the full demonstration of this system here:**  
-[🔗 Demo Video](output_videos/demo_analytics.mp4)
 
 ---
 
