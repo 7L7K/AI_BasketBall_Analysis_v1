@@ -21,7 +21,6 @@ class BallTracksDrawer:
                 if ball["bbox"] is None:
                     continue
 
-                # Choisir la couleur selon possession
                 if ball_aquisition[frame_num] is not None:
                     color = self.ball_color_in_possession
                 else:
