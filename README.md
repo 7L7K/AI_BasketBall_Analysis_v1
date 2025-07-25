@@ -7,10 +7,7 @@
 
 ## 🎥 Demo Video
 
-<video width="720" height="400" controls>
-  <source src="output_videos/Video_1_output.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+![demo_video](output_videos/Video_1_output.mp4)
 
 ---
 
