@@ -1,1 +1,1 @@
-from .ball_acquisition import BallAcquisitionDetector
+from .ball_acquisition import BallAquisitionDetector
