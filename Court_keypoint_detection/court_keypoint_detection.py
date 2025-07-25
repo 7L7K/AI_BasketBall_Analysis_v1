@@ -1,28 +1,56 @@
 from ultralytics import YOLO
 import sys
-sys.path.append("../") 
+sys.path.append('../')
 from utils import read_stub, save_stub
+import numpy as np
 
-class CourtKeypointDetection:
-    def __init__(self, model_path: str):
+class CourtKeypointDetector:
+    def __init__(self, model_path, conf_threshold=0.6):
         """
-        Initialize the YOLO model for keypoint detection.
+        Initialize the CourtKeypointDetector with a YOLO model and confidence threshold.
         """
         self.model = YOLO(model_path)
-
-    def get_court_keypoints(self, frames, conf_threshold=0.5, batch_size=20, read_from_stub=False, stub_path=None):
+        self.conf_threshold = conf_threshold
+        self.last_valid_keypoints = None  # Stores last valid keypoints for fallback
+    
+    def get_court_keypoints(self, frames, read_from_stub=False, stub_path=None):
         """
-        Predict court keypoints on a list of frames.
+        Detect court keypoints for a list of frames.
         """
         court_keypoints = read_stub(read_from_stub, stub_path)
-        if court_keypoints is not None :
-          if len(court_keypoints)==len(frames):
+        if court_keypoints is not None and len(court_keypoints) == len(frames):
             return court_keypoints
-          else:
-            for i in range(0, len(frames), batch_size):
-                batch = frames[i:i+batch_size]
-                detections_batch = self.model.predict(batch, conf=conf_threshold)
-                for detection in detections_batch:
-                    court_keypoints.append(detection.keypoints)
+        
+        batch_size = 20
+        court_keypoints = []
+        
+        for i in range(0, len(frames), batch_size):
+            detections_batch = self.model.predict(frames[i:i+batch_size], conf=self.conf_threshold)
+
+            for frame_idx, detection in enumerate(detections_batch, start=i):
+                kps = detection.keypoints
+                if hasattr(kps, 'confidence'):
+                    filtered_kps = []
+                    for idx, (point, conf) in enumerate(zip(kps.xy[0], kps.confidence)):
+                        if conf >= self.conf_threshold:
+                            filtered_kps.append(point.cpu().numpy())
+                        else:
+                            if self.last_valid_keypoints is not None and idx < len(self.last_valid_keypoints):
+                                filtered_kps.append(self.last_valid_keypoints[idx])
+                            else:
+                                filtered_kps.append(point.cpu().numpy())
+                    filtered_kps = np.array(filtered_kps)
+
+                    if np.all(filtered_kps == 0) and self.last_valid_keypoints is not None:
+                        filtered_kps = self.last_valid_keypoints
+
+                    court_keypoints.append(filtered_kps)
+                    self.last_valid_keypoints = filtered_kps
+
+                else:
+                    kp_array = kps.xy[0].cpu().numpy()
+                    court_keypoints.append(kp_array)
+                    self.last_valid_keypoints = kp_array
+
         save_stub(stub_path, court_keypoints)
         return court_keypoints
