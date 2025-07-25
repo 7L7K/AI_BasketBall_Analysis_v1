@@ -20,5 +20,3 @@ distances = calculator.calculate_distance(tactical_player_positions)
 
 # 3. Calculate speeds (km/h) from distances:
 speeds = calculator.calculate_speed(distances, fps=30)
-
-
