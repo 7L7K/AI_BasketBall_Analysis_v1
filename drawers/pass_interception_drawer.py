@@ -1,105 +1,156 @@
 import cv2
-import numpy as np
+from typing import List, Tuple
+
 
 class PassInterceptionDrawer:
-    def __init__(self, team1_color=(255, 0, 0), team2_color=(0, 0, 255), bg_color=(20, 20, 20)):
+    def __init__(
+        self,
+        team_1_color: List[int] = [255, 245, 238],
+        team_2_color: List[int] = [128, 0, 0],
+    ):
         """
-        Initializes the drawer with team and background colors.
+        Initialize the drawer with team colors.
         """
-        self.team1_color = team1_color
-        self.team2_color = team2_color
-        self.bg_color = bg_color
+        # Convert RGB to BGR for OpenCV (OpenCV uses BGR order)
+        self.team_colors = {
+            1: tuple(reversed(team_1_color)),
+            2: tuple(reversed(team_2_color)),
+        }
 
-    def draw(self, video_frames, passes, interceptions):
+    def get_stats(
+        self,
+        passes: List[int],
+        interceptions: List[int],
+    ) -> Tuple[int, int, int, int]:
         """
-        Draws pass and interception stats onto each video frame.
-        
-        Args:
-            video_frames (list): List of video frames (BGR images).
-            passes (list): List containing pass detection info per frame.
-            interceptions (list): List containing interception info per frame.
-
-        Returns:
-            list: Video frames with overlaid stats.
+        Count total passes and interceptions for each team.
         """
-        output_video_frames = []
+        team1_passes = 0
+        team2_passes = 0
+        team1_interceptions = 0
+        team2_interceptions = 0
 
-        for frame_num, frame in enumerate(video_frames):
-            drawn_frame = self.draw_frame(frame.copy(), frame_num, passes, interceptions)
-            output_video_frames.append(drawn_frame)
-
-        return output_video_frames
-
-    def get_stats(self, passes, interceptions, until_frame=None):
-        """
-        Computes the number of passes and interceptions per team.
-
-        Args:
-            passes (list): List of team pass events per frame.
-            interceptions (list): List of team interception events per frame.
-            until_frame (int): Frame number to compute stats up to (exclusive). If None, uses entire list.
-
-        Returns:
-            tuple: (team1_passes, team2_passes, team1_interceptions, team2_interceptions)
-        """
-        if until_frame is None:
-            until_frame = len(passes)
-
-        team1_passes = sum(1 for i in range(until_frame) if passes[i] == 1)
-        team2_passes = sum(1 for i in range(until_frame) if passes[i] == 2)
-        team1_interceptions = sum(1 for i in range(until_frame) if interceptions[i] == 1)
-        team2_interceptions = sum(1 for i in range(until_frame) if interceptions[i] == 2)
+        for pass_frame, interception_frame in zip(passes, interceptions):
+            if pass_frame == 1:
+                team1_passes += 1
+            elif pass_frame == 2:
+                team2_passes += 1
+            if interception_frame == 1:
+                team1_interceptions += 1
+            elif interception_frame == 2:
+                team2_interceptions += 1
 
         return team1_passes, team2_passes, team1_interceptions, team2_interceptions
 
-    def draw_frame(self, frame, frame_num, passes, interceptions):
+    def draw(
+        self,
+        video_frames: List,
+        passes: List[int],
+        interceptions: List[int],
+    ) -> List:
         """
-        Overlays pass/interception statistics for the current frame.
-
-        Args:
-            frame (np.ndarray): The video frame.
-            frame_num (int): Current frame number.
-            passes (list): Passes list.
-            interceptions (list): Interceptions list.
-
-        Returns:
-            np.ndarray: Annotated frame.
+        Draw pass and interception stats on each video frame.
         """
-        overlay = frame.copy()
-        font_scale = 0.75
-        font_thickness = 2
+        output_frames = []
+        for frame_num, frame in enumerate(video_frames):
+            frame_drawn = self.draw_frame(frame.copy(), frame_num, passes, interceptions)
+            output_frames.append(frame_drawn)
+        return output_frames
+
+    def draw_frame(
+        self,
+        frame,
+        frame_num: int,
+        passes: List[int],
+        interceptions: List[int],
+    ):
+        """
+        Draw pass/interception stats box on a single frame.
+        """
+        font = cv2.FONT_HERSHEY_DUPLEX
+        font_scale = 0.5
+        font_thickness = 1
 
         h, w = frame.shape[:2]
-        rectx1 = int(w * 0.16)
-        recty1 = int(h * 0.75)
-        rectx2 = int(w * 0.55)
-        recty2 = int(h * 0.91)
 
-        text_x = rectx1 + 15
-        text_y1 = recty1 + 40
-        text_y2 = recty1 + 80
-        text_y3 = recty1 + 120
-        text_y4 = recty1 + 160
+        # Box dimensions and positioning
+        rect_w = int(w * 0.20)
+        rect_h = int(h * 0.075)
+        padding = 8
+        spacing = 20
+        y_offset = 40
 
-        # Draw semi-transparent background
-        cv2.rectangle(overlay, (rectx1, recty1), (rectx2, recty2), self.bg_color, -1)
-        alpha = 0.85
-        cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
+        ball_ctrl_x1 = 10
+        ball_ctrl_y2 = h - int(h * 0.15) - 15 + y_offset
+        ball_ctrl_y1 = ball_ctrl_y2 - rect_h
+        ball_ctrl_x2 = ball_ctrl_x1 + rect_w
 
-        # Get stats up to this frame
-        t1_passes, t2_passes, t1_interceptions, t2_interceptions = self.get_stats(passes, interceptions, frame_num)
+        horizontal_gap = 20
+        pi_x1 = ball_ctrl_x2 + horizontal_gap
+        pi_y2 = ball_ctrl_y2
+        pi_y1 = pi_y2 - rect_h
+        pi_x2 = pi_x1 + rect_w
 
-        # Overlay text
-        cv2.putText(frame, f"Team 1 Passes: {t1_passes}", (text_x, text_y1),
-                    cv2.FONT_HERSHEY_SIMPLEX, font_scale, self.team1_color, font_thickness)
+        header_h = int(rect_h * 0.5)
+        header_y1 = pi_y1 - header_h
+        header_y2 = pi_y1
 
-        cv2.putText(frame, f"Team 2 Passes: {t2_passes}", (text_x, text_y2),
-                    cv2.FONT_HERSHEY_SIMPLEX, font_scale, self.team2_color, font_thickness)
+        text_x = pi_x1 + padding
+        text_y1 = pi_y1 + padding + 10
+        text_y2 = text_y1 + spacing
+        header_text_y = header_y1 + int(header_h * 0.7)
 
-        cv2.putText(frame, f"Team 1 Interceptions: {t1_interceptions}", (text_x, text_y3),
-                    cv2.FONT_HERSHEY_SIMPLEX, font_scale, self.team1_color, font_thickness)
+        # Colors in BGR
+        brown_bg = (92, 64, 51)
+        vivid_blue = (0, 187, 220)
 
-        cv2.putText(frame, f"Team 2 Interceptions: {t2_interceptions}", (text_x, text_y4),
-                    cv2.FONT_HERSHEY_SIMPLEX, font_scale, self.team2_color, font_thickness)
+        team_1_color = self.team_colors[1]
+        team_2_color = self.team_colors[2]
+
+        # Draw background box with border
+        cv2.rectangle(frame, (pi_x1, header_y1), (pi_x2, pi_y2), brown_bg, thickness=-1)
+        cv2.rectangle(frame, (pi_x1, header_y1), (pi_x2, pi_y2), (200, 200, 200), thickness=1)
+
+        # Compute cumulative stats up to current frame
+        passes_till_now = passes[: frame_num + 1]
+        interceptions_till_now = interceptions[: frame_num + 1]
+        team1_passes, team2_passes, team1_interceptions, team2_interceptions = self.get_stats(
+            passes_till_now, interceptions_till_now
+        )
+
+        # Draw header text
+        cv2.putText(
+            frame,
+            "Pass(P) & Interception(I)",
+            (text_x, header_text_y),
+            font,
+            font_scale,
+            vivid_blue,
+            font_thickness,
+            lineType=cv2.LINE_AA,
+        )
+
+        # Draw team stats text
+        cv2.putText(
+            frame,
+            f"Team 1: P {team1_passes} | I {team1_interceptions}",
+            (text_x, text_y1),
+            font,
+            font_scale,
+            team_1_color,
+            font_thickness,
+            lineType=cv2.LINE_AA,
+        )
+
+        cv2.putText(
+            frame,
+            f"Team 2: P {team2_passes} | I {team2_interceptions}",
+            (text_x, text_y2),
+            font,
+            font_scale,
+            team_2_color,
+            font_thickness,
+            lineType=cv2.LINE_AA,
+        )
 
         return frame
