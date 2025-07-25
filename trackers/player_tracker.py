@@ -1,11 +1,3 @@
-"""
-player_tracker.py
-
-Defines the PlayerTracker class for detecting and tracking players in video frames.
-Uses YOLO (Ultralytics) for object detection and ByteTrack (via the Supervision library)
-for multi-object tracking. Supports caching via stub files.
-"""
-
 import sys
 from typing import List, Dict, Optional
 
