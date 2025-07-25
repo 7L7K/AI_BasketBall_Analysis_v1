@@ -80,10 +80,6 @@ This system analyzes basketball games from video using computer vision and AI:
 
 - Implement **OCR for jersey number recognition** to reliably identify players.  
 - Improve **player re-identification** across multiple cameras or games.  
-- Enhance **event detection**, including fouls, shots, and rebounds.  
-- Integrate **real-time processing** capabilities for live analytics.  
-- Add **advanced tactical analysis** such as heatmaps and play predictions.  
-- Explore **pose estimation** for better player movement and action understanding.  
-- Investigate **multi-modal data fusion**, combining audio commentary and sensor data for richer insights.
+- Enhance **event detection**, including fouls, shots, and rebounds.
 
 ---
