@@ -2,7 +2,6 @@
 
 This repository contains utilities to estimate and refine homographies between image points and court coordinates, specifically designed for tactical view conversion in sports analytics.
 
---
 
 ## Features:
 - Robust homography estimation using RANSAC with outlier rejection 
@@ -11,7 +10,6 @@ This repository contains utilities to estimate and refine homographies between i
 - Temporal smoothing by blending with previous homography estimates 
 - Keypoint order optimization for consistent tracking 
 
---
 
 ## Usage 🛠:
 ```python
