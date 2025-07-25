@@ -7,7 +7,8 @@
 
 ## 🎥 Demo Video
 
-![demo_video](output_videos/Video_1_output.mp4)
+![Demo of AI-Powered Basketball Game Analyzer](output_videos/Video_1_output.gif)
+
 
 ---
 
