@@ -1,122 +1,98 @@
-"""
-team_assigner.py
-
-Assigns teams to players across video frames using Fashion-CLIP model.
-Determines team ID based on jersey color classification.
-"""
-
-import sys
-from typing import List, Dict, Tuple, Optional
-
-import cv2
-import torch
 from PIL import Image
+import cv2
 from transformers import CLIPProcessor, CLIPModel
 
-# Add parent directory to path if needed
-sys.path.append("..")
-
+import sys 
+sys.path.append('../')
 from utils import read_stub, save_stub
 
 
 class TeamAssigner:
-    """
-    Assigns team IDs to tracked players based on jersey color using the Fashion-CLIP model.
-    """
+    def __init__(self,
+                 team_1_class_name="white shirt",
+                 team_2_class_name="dark blue shirt",
+                 ):
+        """
+        Initialize the TeamAssigner with specified team jersey descriptions.
+        """
+        self.team_colors = {}
+        self.player_team_dict = {}        
 
-    def __init__(
-        self,
-        team1_class_name: str = "white shirt",
-        team2_class_name: str = "dark blue shirt"
-    ):
-        """
-        Initialize the TeamAssigner with class names for team uniforms.
-        """
-        self.team1_class_name = team1_class_name
-        self.team2_class_name = team2_class_name
-        self.player_team_dict: Dict[int, int] = {}
-        self.model: Optional[CLIPModel] = None
-        self.processor: Optional[CLIPProcessor] = None
+        self.team_1_class_name = team_1_class_name
+        self.team_2_class_name = team_2_class_name
 
-    def load_model(self) -> None:
+    def load_model(self):
         """
-        Load the pre-trained Fashion-CLIP model and processor from Hugging Face.
+        Loads the pre-trained vision model for jersey color classification.
         """
         self.model = CLIPModel.from_pretrained("patrickjohncyh/fashion-clip")
         self.processor = CLIPProcessor.from_pretrained("patrickjohncyh/fashion-clip")
 
-    def get_player_color(self, frame, bbox: Tuple[int, int, int, int]) -> str:
+    def get_player_color(self, frame, bbox):
         """
-        Predict the jersey color by classifying a cropped player image.
+        Analyzes the jersey color of a player within the given bounding box.
         """
-        x1, y1, x2, y2 = bbox
-        image = frame[int(y1):int(y2), int(x1):int(x2)]
+        image = frame[int(bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])]
 
-        if image.size == 0:
-            return "unknown"
-
+        # Convert to PIL Image
         rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         pil_image = Image.fromarray(rgb_image)
+        image = pil_image
 
-        class_names = [self.team1_class_name, self.team2_class_name]
-        inputs = self.processor(
-            text=class_names,
-            images=pil_image,
-            return_tensors="pt",
-            padding=True
-        )
+        classes = [self.team_1_class_name, self.team_2_class_name]
 
-        with torch.no_grad():
-            outputs = self.model(**inputs)
-            logits_per_image = outputs.logits_per_image
-            probs = logits_per_image.softmax(dim=1)
+        inputs = self.processor(text=classes, images=image, return_tensors="pt", padding=True)
 
-        return class_names[probs.argmax(dim=1).item()]
+        outputs = self.model(**inputs)
+        logits_per_image = outputs.logits_per_image
+        probs = logits_per_image.softmax(dim=1)
 
-    def get_player_team(self, frame, bbox: Tuple[int, int, int, int], player_id: int) -> int:
+        class_name = classes[probs.argmax(dim=1)[0]]
+
+        return class_name
+
+    def get_player_team(self, frame, player_bbox, player_id):
         """
-        Assign a team ID to a player based on jersey classification.
+        Gets the team assignment for a player, using cached results if available.
         """
         if player_id in self.player_team_dict:
             return self.player_team_dict[player_id]
 
-        color_class = self.get_player_color(frame, bbox)
-        team_id = 1 if color_class == self.team1_class_name else 2
-        self.player_team_dict[player_id] = team_id
+        player_color = self.get_player_color(frame, player_bbox)
 
+        team_id = 2
+        if player_color == self.team_1_class_name:
+            team_id = 1
+
+        self.player_team_dict[player_id] = team_id
         return team_id
 
-    def get_player_team_across_frames(
-        self,
-        video_frames: List,
-        player_tracks: List[Dict[int, Dict[str, Tuple[int, int, int, int]]]],
-        read_from_stub: bool = False,
-        stub_path: Optional[str] = None
-    ) -> List[Dict[int, int]]:
+    def get_player_teams_across_frames(self, video_frames, player_tracks, read_from_stub=False, stub_path=None):
         """
-        Assign teams to players across all frames using jersey color detection.
+        Processes all video frames to assign teams to players, with optional caching.
         """
-        cached = read_stub(read_from_stub, stub_path)
-        if cached is not None and len(cached) == len(video_frames):
-            return cached
+        player_assignment = read_stub(read_from_stub, stub_path)
+        if player_assignment is not None:
+            if len(player_assignment) == len(video_frames):
+                return player_assignment
 
         self.load_model()
-        player_assignments = []
 
-        for frame_num, frame_tracks in enumerate(player_tracks):
-            current_assignment: Dict[int, int] = {}
+        player_assignment = []
+        for frame_num, player_track in enumerate(player_tracks):        
+            player_assignment.append({})
 
-            # Reset tracking dictionary periodically
             if frame_num % 50 == 0:
                 self.player_team_dict = {}
 
-            for player_id, track_data in frame_tracks.items():
-                bbox = track_data.get("bbox")
-                if bbox:
-                    team_id = self.get_player_team(video_frames[frame_num], bbox, player_id)
-                    current_assignment[player_id] = team_id
+            for player_id, track in player_track.items():
+                team = self.get_player_team(
+                    video_frames[frame_num],   
+                    track['bbox'],
+                    player_id
+                )
+                player_assignment[frame_num][player_id] = team
 
-            player_assignments.append(current_assignment)
+        save_stub(stub_path, player_assignment)
 
-        save_stub(stub_path, player_assignments)
-        return player_assignments
+        return player_assignment
