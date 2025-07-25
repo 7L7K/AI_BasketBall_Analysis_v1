@@ -1,17 +1,17 @@
 # ⚡ Speed and Distance Calculator ⚡
 
-This module provides tools to calculate players' movement distances and speeds in real-world units from video frames. 🏃‍♂️📏
+This module provides tools to calculate players' movement distances and speeds in real-world units from video frames.
 
 ## Features
 
--  Converts player pixel coordinates to meters based on known field dimensions.
--  Calculates per-frame distances traveled by each player.
--  Computes player speeds over a sliding window of frames (default: last 5 frames).
--  Supports variable video frame rates (fps).
+- Converts player pixel coordinates to meters based on known field dimensions.
+- Calculates per-frame distances traveled by each player.
+- Computes player speeds over a sliding window of frames (default: last 5 frames).
+- Supports variable video frame rates (fps).
 
-##  Usage
+## Usage
 
-```pythom
+```python
 # 1. Initialize the `SpeedAndDistanceCalculator` with video resolution and real-world field size:
 calculator = SpeedAndDistanceCalculator(width_in_pixels, height_in_pixels, width_in_meters, height_in_meters)
 
