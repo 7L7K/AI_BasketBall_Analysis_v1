@@ -27,7 +27,7 @@ class PlayerTracksDrawer:
         video_frames: List[Any],
         tracks: List[Dict[int, Dict[str, Any]]],
         player_assignment: List[Dict[int, int]],
-        ball_acquisition: List[int]
+        ball_aquisition: List[int]
     ) -> List[Any]:
         """
         Draws ellipses around tracked player positions and a triangle for the player in possession.
@@ -38,7 +38,7 @@ class PlayerTracksDrawer:
             frame_copy = frame.copy()
             player_dict = tracks[frame_num]
             assignment_dict = player_assignment[frame_num]
-            id_ball_handler = ball_acquisition[frame_num]
+            id_ball_handler = ball_aquisition[frame_num]
 
             for track_id, player_data in player_dict.items():
                 team_id = assignment_dict.get(track_id, self.default_player_team_id)
