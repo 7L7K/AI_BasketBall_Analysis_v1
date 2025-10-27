@@ -33,3 +33,17 @@ def measure_distance(p1: Tuple[float, float], p2: Tuple[float, float]) -> float:
     x1, y1 = p1
     x2, y2 = p2
     return ((x1 - x2)**2 + (y1 - y2)**2)**0.5
+
+
+def get_foot_position(bbox: Tuple[float, float, float, float]) -> Tuple[int, int]:
+    """
+    Estimate the player's foot position as the bottom-center of the bounding box.
+    """
+    x1, y1, x2, y2 = bbox
+    x_center = int((x1 + x2) / 2)
+    return x_center, int(y2)
+
+
+# Backwards-compatibility alias used in some modules
+def get_center_of_bbox(bbox: Tuple[float, float, float, float]) -> Tuple[int, int]:
+    return get_center_bbox(bbox)

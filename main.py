@@ -3,20 +3,16 @@ import argparse
 from utils import read_video, save_video
 from trackers import PlayerTracker, BallTracker
 from team_assigner import TeamAssigner
-from court_keypoint_detector import CourtKeypointDetector
-from ball_aquisition import BallAquisitionDetector
-from pass_and_interception_detector import PassAndInterceptionDetector
-from tactical_view_converter import TacticalViewConverter
-from speed_and_distance_calculator import SpeedAndDistanceCalculator
+from Court_keypoint_detection import CourtKeypointDetector
+from ball_acquisition import BallAquisitionDetector
+from pass_interception_detector import PassAndInterceptionDetector
+from tactical_view import TacticalViewConverter
+from speed_and_distance_calculation import SpeedAndDistanceCalculator
 from drawers import (
     PlayerTracksDrawer, 
     BallTracksDrawer,
     CourtKeypointDrawer,
     TeamBallControlDrawer,
-    FrameNumberDrawer,
-    PassInterceptionDrawer,
-    TacticalViewDrawer,
-    SpeedAndDistanceDrawer
 )
 from configs import(
     STUBS_DEFAULT_PATH,
@@ -111,10 +107,7 @@ def main():
     ball_tracks_drawer = BallTracksDrawer()
     court_keypoint_drawer = CourtKeypointDrawer()
     team_ball_control_drawer = TeamBallControlDrawer()
-    frame_number_drawer = FrameNumberDrawer()
-    pass_and_interceptions_drawer = PassInterceptionDrawer()
-    tactical_view_drawer = TacticalViewDrawer()
-    speed_and_distance_drawer = SpeedAndDistanceDrawer()
+    # Optional drawers removed for minimal run
 
     ## Draw object Tracks
     output_video_frames = player_tracks_drawer.draw(video_frames, 
@@ -124,10 +117,11 @@ def main():
     output_video_frames = ball_tracks_drawer.draw(output_video_frames, ball_tracks)
 
     ## Draw KeyPoints
-    output_video_frames = court_keypoint_drawer.draw(output_video_frames, court_keypoints_per_frame)
+    # Optional: draw court keypoints if present
+    # output_video_frames = court_keypoint_drawer.draw(output_video_frames, court_keypoints_per_frame)
 
     ## Draw Frame Number
-    output_video_frames = frame_number_drawer.draw(output_video_frames)
+    # Skip frame number overlay in minimal run
 
     # Draw Team Ball Control
     output_video_frames = team_ball_control_drawer.draw(output_video_frames,
@@ -135,27 +129,13 @@ def main():
                                                         ball_aquisition)
 
     # Draw Passes and Interceptions
-    output_video_frames = pass_and_interceptions_drawer.draw(output_video_frames,
-                                                             passes,
-                                                             interceptions)
+    # Skip pass/interception overlay in minimal run
     
     # Speed and Distance Drawer
-    output_video_frames = speed_and_distance_drawer.draw(output_video_frames,
-                                                         player_tracks,
-                                                         player_distances_per_frame,
-                                                         player_speed_per_frame
-                                                         )
+    # Skip speed overlay in minimal run
 
     ## Draw Tactical View
-    output_video_frames = tactical_view_drawer.draw(output_video_frames,
-                                                    tactical_view_converter.court_image_path,
-                                                    tactical_view_converter.width,
-                                                    tactical_view_converter.height,
-                                                    tactical_view_converter.key_points,
-                                                    tactical_player_positions,
-                                                    player_assignment,
-                                                    ball_aquisition,
-                                                    )
+    # Skip tactical view overlay in minimal run
 
     # Save video
     save_video(output_video_frames, args.output_video)

@@ -1,4 +1,4 @@
-from .utils import draw_traingle
+from .utils import draw_triangle
 
 class BallTracksDrawer:
     def __init__(self):
@@ -21,12 +21,13 @@ class BallTracksDrawer:
                 if ball["bbox"] is None:
                     continue
 
-                if ball_aquisition[frame_num] is not None:
+                # Ball considered "in possession" only if a valid player id is present
+                if ball_aquisition[frame_num] is not None and ball_aquisition[frame_num] != -1:
                     color = self.ball_color_in_possession
                 else:
                     color = self.ball_color_free
 
-                frame = draw_traingle(frame, ball["bbox"], color)
+                frame = draw_triangle(frame, ball["bbox"], color)
 
             output_video_frames.append(frame)
         return output_video_frames
